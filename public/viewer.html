@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewer</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./bootstrap.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src='viewer.js'></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <header class="header_area">
+        <div class="main_menu">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container">
+                    <a class="home_logo" href="http://localhost/index.html">
+                        <img src='image/portfolio.png' />
+                    </a>
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav justify-content-end">
+                            <li class="nav-item active"><a class="nav-link" href="http://localhost/index.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" id="i_braodcast" href="http://localhost:5000/viewer.html">방송보기</a></li>
+                            <li class="nav-item submenu dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                    aria-haspopup="true" aria-expanded="false">포트폴리오</a>
+                                <ul class="dropdown-menu">
+                                    <li class="nav-item"><a class="nav-link" href="http://localhost/portfolio.html?subject=java">Java</a>
+                                    </li>
+                                    <li class="nav-item"><a class="nav-link"
+                                            href="http://localhost/portfolio.html?subject=android">Android</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="http://localhost/portfolio.html?subject=php">PHP</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item"><a class="nav-link" href="board.php">자유게시판</a></li>
+                            <li class="nav-item"><a class="nav-link" href="https://github.com/choidongkyu">MY GITHUB</a>
+                            <li class="nav-item"><a class="nav-link" id="i_login_menu" href="http://localhost/index.html">그만보기</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!--================ Start Video Banner Area =================-->
+    <section class="home_banner_area">
+        <div class="banner_inner">
+            <div class="container">
+                <div class="row">
+                    <div class="left_img">
+                        <div class="banner_content" id="video_banner">
+                            <video autoplay id="video"></video>
+                            <div class="d-flex align-items-center">
+                                <button id='my-button' class="primary_btn">방송보기</button>
+                            </div>
+                        </div>
+                        <div id="chat_container">
+                            <ul id="chatView">
+                            </ul>
+                            <form id="chatForm" action="">
+                                <input id="msg" autocomplete="off">
+                                <button id="send">전송</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ End Video Banner Area =================-->
+    <script src='util.js'></script>
+</body>
+</html>
