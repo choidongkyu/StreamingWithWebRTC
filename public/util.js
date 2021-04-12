@@ -1,5 +1,5 @@
-// 서버와 ajax로 통신하기 위한 함수
-function nv_ajax(ajax_url, ajax_type, ajax_data) {
+// 외부서버와 ajax로 통신하기 위한 함수
+function ex_nv_ajax(ajax_url, ajax_type, ajax_data) {
     return new Promise((res, rej) => {
         $.ajax({
             // 클라이언트가 요청을 보낼 서버의 URL 주소
@@ -24,6 +24,31 @@ function nv_ajax(ajax_url, ajax_type, ajax_data) {
     })
 }
 
+function nv_ajax(ajax_url, ajax_type, ajax_data) {
+    return new Promise((res, rej) => {
+      $.ajax({
+        // 클라이언트가 요청을 보낼 서버의 URL 주소
+        url: ajax_url,
+        //http 요청 방식(GET,POST)
+        method: ajax_type,
+        // HTTP 요청과 함께 서버로 보낼 데이터
+        data: ajax_data,
+        // 서버에서 보내줄 데이터의 타입
+        dataType: "JSON",
+        // 통신이 성공적으로 이루어졌을때 이 메소드를 타게 된다
+        success: function (data) {
+          // 데이터 요청에 대한 응답값
+          res(data);
+          //return data;
+        },
+        // 통신이 실패했어도 완료되면 이 메소드를 타게됨
+        error: function (request, status, error) {
+          rej(new Error(error));
+        },
+      });
+    })
+  }
+
 async function getUser() {
     //session이 존재하는지 서버에 요청
     const ajax_url = "http://localhost/backend/session.php";
@@ -33,9 +58,44 @@ async function getUser() {
     };
 
     //비동기 처리 위해 await 사용, 데이터 수신
-    var result = await nv_ajax(ajax_url, ajax_type, ajax_data);
+    var result = await ex_nv_ajax(ajax_url, ajax_type, ajax_data);
     //관리자인 경우 result가 super로 옴
     return result['user'];
+}
+
+async function getWallet() {
+    //session이 존재하는지 서버에 요청
+    const ajax_url = "http://localhost/backend/wallet.php";
+    const ajax_type = "GET";
+    const ajax_data = {
+        wallet: "wallet"
+    };
+
+    //비동기 처리 위해 await 사용, 데이터 수신
+    var result = await ex_nv_ajax(ajax_url, ajax_type, ajax_data);
+    //관리자인 경우 result가 super로 옴
+    return result['wallet'];
+}
+
+async function setWallet(user, price) {
+    //session이 존재하는지 서버에 요청
+    const ajax_url = "http://localhost/backend/wallet.php";
+    const ajax_type = "POST";
+    const ajax_data = {
+        wallet: price,
+        user: user
+    };
+
+    //비동기 처리 위해 await 사용, 데이터 수신
+    var result = await nv_ajax(ajax_url, ajax_type, ajax_data);
+    if (result['retCode'] == -1) {
+        alert("데이터베이스 적용에 실패 하였습니다.");
+    }
+}
+
+//입력된 값이 숫자인지 판별 해주는 메소드
+function isNumber(value) {
+    return typeof value === 'number' && isFinite(value);
 }
 
 //비동기 처리위하여 async 익명함수로 구현

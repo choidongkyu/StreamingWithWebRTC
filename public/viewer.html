@@ -8,8 +8,8 @@
     <link rel="stylesheet" href="./bootstrap.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src='viewer.js'></script>
     <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 </head>
 <body>
     <header class="header_area">
@@ -55,6 +55,7 @@
                             <video autoplay id="video"></video>
                             <div class="d-flex align-items-center">
                                 <button id='my-button' class="primary_btn">방송보기</button>
+                                <button id='support-button' class="primary_btn">후원하기</button>
                             </div>
                         </div>
                         <div id="chat_container">
@@ -72,5 +73,7 @@
     </section>
     <!--================ End Video Banner Area =================-->
     <script src='util.js'></script>
+    <script src='viewer.js'></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 </html>
