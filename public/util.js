@@ -63,12 +63,12 @@ async function getUser() {
     return result['user'];
 }
 
-async function getWallet() {
+async function getWallet(user) {
     //session이 존재하는지 서버에 요청
     const ajax_url = "http://localhost/backend/wallet.php";
     const ajax_type = "GET";
     const ajax_data = {
-        wallet: "wallet"
+        user: user
     };
 
     //비동기 처리 위해 await 사용, 데이터 수신
@@ -130,6 +130,10 @@ function isNumber(value) {
 
         socket.on('enter-msg', (msg) => {
             $('#chatView').append($('<li style="color:green; background-color:yellow; text-align: center;">').text(msg.message));
+        })
+        socket.on('spon-msg', (msg) => {
+            $('#chatView').append('<img src="image/logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 50%;"/>');
+            $('#chatView').append($('<li style="color:red; background-color:yellow; text-align: center;">').text(msg.message));
         })
     });
 }());

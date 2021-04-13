@@ -8,28 +8,54 @@ window.onload = () => {
     //후원하기 버튼 클릭
     document.getElementById('support-button').onclick = async () => {
         //보유 금액 확인
-        var wallet = await getWallet();
-
-        if (wallet == 'null') { //비회원은 보유금액이 존재하지 않으므로 후원 불가능
+        var user = await getUser();
+        var wallet = await getWallet(user);
+        if (wallet === null) { //비회원은 보유금액이 존재하지 않으므로 후원 불가능
             swal("비회원은 후원할 수 없습니다.");
             return;
         }
 
         swal({
-                title: "후원하기",
+                title: "보유금액",
                 text: "현재 보유 금액 : " + wallet + "원",
-                content: "input",
                 buttons: {
-                    charge: {
-                        text: "충전하기",
-                        value: "charge",
-                    },
+                    charge: "충전하기",
                     support: "후원하기"
                 }
             })
             .then((value) => {
-                if (value === "support") { //후원하기 버튼 
+                if (value === "support") { //후원하기 버튼
+                    swal({
+                            title: "후원하기",
+                            content: {
+                                element: "input",
+                                attributes: {
+                                    placeholder: "후원할 금액을 입력하세요"
+                                }
+                            }
+                        })
+                        .then(async (value) => {
+                            value = Number(value);
+                            if (isNaN(value) || value <= 0) {
+                                alert("정확한 숫자를 입력해 주세요");
+                                return;
+                            }
 
+                            if(value > wallet) {
+                                alert("보유 금액이 부족합니다.");
+                                return;
+                            }
+                            var superWallet = await getWallet("super");//관리자가 보유한 금액
+                            var user = await getUser();
+                            const socket = io();
+                            let spon_msg = {
+                                message: user + "님이 " + value + "원을 후원하였습니다."
+                            }
+                            socket.emit("spon-msg", spon_msg);
+                            var result = Number(superWallet) + Number(value);
+                            setWallet("super", result); //관리자에게 후원한 만큼의 금액 +
+                            setWallet(user, Number(wallet) - Number(value)); //유저는 후원한 금액만큼 -
+                        })
                 } else if (value == "charge") { // 충전하기 버튼
                     swal({
                             title: "충전하기",
@@ -48,21 +74,8 @@ window.onload = () => {
 
                             var IMP = window.IMP; // 생략가능
                             IMP.init('imp45279495');
-                            // 'iamport' 대신 부여받은 "가맹점 식별코드"를 사용
-                            // i'mport 관리자 페이지 -> 내정보 -> 가맹점식별코드
                             IMP.request_pay({
-                                pg: 'inicis', // version 1.1.0부터 지원.
-                                /*
-                                 'kakao':카카오페이,
-                                    html5_inicis':이니시스(웹표준결제)
-                                    'nice':나이스페이
-                                    'jtnet':제이티넷
-                                    'uplus':LG유플러스
-                                    'danal':다날
-                                    'payco':페이코
-                                    'syrup':시럽페이
-                                    'paypal':페이팔
-                                */
+                                pg: 'inicis',
                                 pay_method: 'card',
                                 /*
                                     'samsung':삼성페이,
@@ -93,7 +106,8 @@ window.onload = () => {
                                     var msg = '결제가 완료되었습니다.';
                                     alert(msg);
                                     var user = await getUser(); //user id 얻어옴
-                                    setWallet(user, price); //db에 결제된 값 저장
+                                    var result = price + Number(wallet);
+                                    setWallet(user, result); //db에 결제된 값 저장
                                 } else {
                                     var msg = '결제에 실패하였습니다.\n';
                                     msg += rsp.error_msg;

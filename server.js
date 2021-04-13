@@ -81,6 +81,11 @@ io.on('connection', (socket) => {
         console.log(msg.message);
         io.emit('enter-msg', msg);
     })
+
+    socket.on('spon-msg', (msg) => {
+        console.log(msg.message);
+        io.emit('spon-msg', msg);
+    })
 })
 
 
