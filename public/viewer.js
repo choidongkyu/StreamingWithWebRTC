@@ -41,11 +41,11 @@ window.onload = () => {
                                 return;
                             }
 
-                            if(value > wallet) {
+                            if (value > wallet) {
                                 alert("보유 금액이 부족합니다.");
                                 return;
                             }
-                            var superWallet = await getWallet("super");//관리자가 보유한 금액
+                            var superWallet = await getWallet("super"); //관리자가 보유한 금액
                             var user = await getUser();
                             const socket = io();
                             let spon_msg = {
@@ -55,6 +55,22 @@ window.onload = () => {
                             var result = Number(superWallet) + Number(value);
                             setWallet("super", result); //관리자에게 후원한 만큼의 금액 +
                             setWallet(user, Number(wallet) - Number(value)); //유저는 후원한 금액만큼 -
+
+                            //후원기록에 저장
+
+                            //서버에 후원 기록 등록 요청
+                            const ajax_url = "http://localhost/backend/spon_board.php";
+                            const ajax_type = "POST";
+                            const ajax_data = {
+                                request: "post_write",
+                                board_title: value+"원",
+                                board_content:"TODO",
+                                board_user: user,
+                            };
+
+                            //비동기 처리 위해 await 사용, 데이터 수신
+                            result = await nv_ajax(ajax_url, ajax_type, ajax_data);
+                            console.log(result);
                         })
                 } else if (value == "charge") { // 충전하기 버튼
                     swal({
