@@ -51,6 +51,7 @@ window.onload = () => {
                             let spon_msg = {
                                 message: user + "님이 " + value + "원을 후원하였습니다."
                             }
+
                             socket.emit("spon-msg", spon_msg);
                             var result = Number(superWallet) + Number(value);
                             setWallet("super", result); //관리자에게 후원한 만큼의 금액 +
@@ -63,8 +64,8 @@ window.onload = () => {
                             const ajax_type = "POST";
                             const ajax_data = {
                                 request: "post_write",
-                                board_title: value+"원",
-                                board_content:"TODO",
+                                board_title: value + "원",
+                                board_content: "TODO",
                                 board_user: user,
                             };
 

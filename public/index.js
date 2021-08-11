@@ -4,7 +4,9 @@ let recorder;
 
 window.onload = () => {
     document.getElementById('my-button').onclick = () => {
-
+        init().then(() => {
+            startRecording();
+        });
     }
 
     document.getElementById('i_login_menu').onclick = () => {
@@ -54,9 +56,6 @@ function stopRecording() {
 async function init() {
     const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: {
-            echoCancellation: true
-          },
     });
     window.stream = stream;
     document.getElementById("video").srcObject = stream;
